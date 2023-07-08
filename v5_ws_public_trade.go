@@ -71,7 +71,7 @@ type V5WebsocketPublicTradeResponse struct {
 
 // V5WebsocketPublicTradeData :
 type V5WebsocketPublicTradeData struct {
-	Timestamp  int    `json:"T"`
+	Timestamp  int64  `json:"T"`
 	Symbol     string `json:"s"`
 	Side       string `json:"S"` // "Buy" or "Sell"
 	Volume     string `json:"v"`
