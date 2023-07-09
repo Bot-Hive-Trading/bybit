@@ -78,7 +78,7 @@ type V5WebsocketPublicTradeData struct {
 	Price      string `json:"p"`
 	Direction  string `json:"L"` // Direction of price change. Unique field for future
 	TradeID    string `json:"i"`
-	BlockTrade bool   `json:"BT"` //Whether it is a block trade order or not
+	BlockTrade bool   `json:"BT"` // Whether it is a block trade order or not
 }
 
 // Key :
