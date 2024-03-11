@@ -198,7 +198,7 @@ func (s *SpotWebsocketV1PublicV1Service) Start(ctx context.Context) {
 		}
 	}()
 
-	ticker := time.NewTicker(20 * time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)

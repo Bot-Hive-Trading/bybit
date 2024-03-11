@@ -140,7 +140,7 @@ func (s *V5WebsocketPrivateService) Start(ctx context.Context, errHandler ErrHan
 		}
 	}()
 
-	ticker := time.NewTicker(20 * time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
 
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
@@ -229,7 +229,7 @@ func (s *V5WebsocketPrivateService) Run() error {
 // Ping :
 func (s *V5WebsocketPrivateService) Ping() error {
 	// NOTE: It appears that two messages need to be sent.
-	// REF: https://github.com/hirokisan/bybit/pull/127#issuecomment-1537479346
+	// REF: https://github.com/Bot-Hive-Trading/bybit/pull/127#issuecomment-1537479346
 	if err := s.writeMessage(websocket.PingMessage, nil); err != nil {
 		return err
 	}
