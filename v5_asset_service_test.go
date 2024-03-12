@@ -160,7 +160,170 @@ func TestV5Asset_GetInternalTransferRecords(t *testing.T) {
 	})
 }
 
-func GetDepositRecords(t *testing.T) {
+func TestV5Asset_CreateUniversalTransfer(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		param := V5CreateUniversalTransferParam{
+			TransferID:      "be7a2462-1138-4e27-80b1-62653f24925e",
+			Coin:            CoinETH,
+			Amount:          "0.5",
+			FromMemberID:    592334,
+			ToMemberID:      691355,
+			FromAccountType: AccountTypeV5CONTRACT,
+			ToAccountType:   AccountTypeV5UNIFIED,
+		}
+
+		path := "/v5/asset/transfer/universal-transfer"
+		method := http.MethodPost
+		status := http.StatusOK
+		respBody := map[string]interface{}{
+			"result": map[string]interface{}{
+				"transferId": "be7a2462-1138-4e27-80b1-62653f24925e",
+			},
+		}
+		bytesBody, err := json.Marshal(respBody)
+		require.NoError(t, err)
+
+		server, teardown := testhelper.NewServer(
+			testhelper.WithHandlerOption(path, method, status, bytesBody),
+		)
+		defer teardown()
+
+		client := NewTestClient().
+			WithBaseURL(server.URL).
+			WithAuth("test", "test")
+
+		resp, err := client.V5().Asset().CreateUniversalTransfer(param)
+		require.NoError(t, err)
+
+		require.NotNil(t, resp)
+		fmt.Println(resp.Result, respBody["result"])
+		testhelper.Compare(t, respBody["result"], resp.Result)
+	})
+	t.Run("authentication required", func(t *testing.T) {
+		param := V5CreateUniversalTransferParam{
+			TransferID:      "be7a2462-1138-4e27-80b1-62653f24925e",
+			Coin:            CoinETH,
+			Amount:          "0.5",
+			FromMemberID:    592334,
+			ToMemberID:      691355,
+			FromAccountType: AccountTypeV5CONTRACT,
+			ToAccountType:   AccountTypeV5UNIFIED,
+		}
+
+		path := "/v5/asset/transfer/universal-transfer"
+		method := http.MethodPost
+		status := http.StatusOK
+		respBody := map[string]interface{}{
+			"result": map[string]interface{}{
+				"transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",
+			},
+		}
+		bytesBody, err := json.Marshal(respBody)
+		require.NoError(t, err)
+
+		server, teardown := testhelper.NewServer(
+			testhelper.WithHandlerOption(path, method, status, bytesBody),
+		)
+		defer teardown()
+
+		client := NewTestClient().
+			WithBaseURL(server.URL)
+
+		_, err = client.V5().Asset().CreateUniversalTransfer(param)
+		assert.Error(t, err)
+	})
+}
+
+func TestV5Asset_GetUniversalTransferRecords(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		param := V5GetUniversalTransferRecordsParam{
+			Limit:  testhelper.Ptr(1),
+			Cursor: testhelper.Ptr("eyJtaW5JRCI6MTc5NjU3OCwibWF4SUQiOjE3OTY1Nzh9"),
+		}
+
+		path := "/v5/asset/transfer/query-universal-transfer-list"
+		method := http.MethodGet
+		status := http.StatusOK
+		respBody := map[string]interface{}{
+			"result": map[string]interface{}{
+				"list": []map[string]interface{}{
+					{
+						"transferId":      "universalTransfer_4c3cfe2f-85cb-11ed-ac09-9e37823c81cd_533285",
+						"coin":            "USDC",
+						"amount":          "1000",
+						"timestamp":       "1672134373000",
+						"status":          "SUCCESS",
+						"fromAccountType": "UNIFIED",
+						"toAccountType":   "UNIFIED",
+						"fromMemberId":    "533285",
+						"toMemberId":      "592324",
+					},
+				},
+				"nextPageCursor": "eyJtaW5JRCI6MTc4OTYwNSwibWF4SUQiOjE3ODk2MDV9",
+			},
+		}
+		bytesBody, err := json.Marshal(respBody)
+		require.NoError(t, err)
+
+		server, teardown := testhelper.NewServer(
+			testhelper.WithHandlerOption(path, method, status, bytesBody),
+		)
+		defer teardown()
+
+		client := NewTestClient().
+			WithBaseURL(server.URL).
+			WithAuth("test", "test")
+
+		resp, err := client.V5().Asset().GetUniversalTransferRecords(param)
+		require.NoError(t, err)
+
+		require.NotNil(t, resp)
+		testhelper.Compare(t, respBody["result"], resp.Result)
+	})
+	t.Run("authentication required", func(t *testing.T) {
+		param := V5GetUniversalTransferRecordsParam{
+			Limit:  testhelper.Ptr(1),
+			Cursor: testhelper.Ptr("eyJtaW5JRCI6MTc5NjU3OCwibWF4SUQiOjE3OTY1Nzh9"),
+		}
+
+		path := "/v5/asset/transfer/query-universal-transfer-list"
+		method := http.MethodGet
+		status := http.StatusOK
+		respBody := map[string]interface{}{
+			"result": map[string]interface{}{
+				"list": []map[string]interface{}{
+					{
+						"transferId":      "universalTransfer_4c3cfe2f-85cb-11ed-ac09-9e37823c81cd_533285",
+						"coin":            "USDC",
+						"amount":          "1000",
+						"timestamp":       "1672134373000",
+						"status":          "SUCCESS",
+						"fromAccountType": "UNIFIED",
+						"toAccountType":   "UNIFIED",
+						"fromMemberId":    "533285",
+						"toMemberId":      "592324",
+					},
+				},
+				"nextPageCursor": "eyJtaW5JRCI6MTc4OTYwNSwibWF4SUQiOjE3ODk2MDV9",
+			},
+		}
+		bytesBody, err := json.Marshal(respBody)
+		require.NoError(t, err)
+
+		server, teardown := testhelper.NewServer(
+			testhelper.WithHandlerOption(path, method, status, bytesBody),
+		)
+		defer teardown()
+
+		client := NewTestClient().
+			WithBaseURL(server.URL)
+
+		_, err = client.V5().Asset().GetUniversalTransferRecords(param)
+		assert.Error(t, err)
+	})
+}
+
+func TestV5Asset_GetDepositRecords(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetDepositRecordsParam{}
 
@@ -249,7 +412,7 @@ func GetDepositRecords(t *testing.T) {
 	})
 }
 
-func GetSubDepositRecords(t *testing.T) {
+func TestV5Asset_GetSubDepositRecords(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetSubDepositRecordsParam{}
 
@@ -308,7 +471,7 @@ func GetSubDepositRecords(t *testing.T) {
 	})
 }
 
-func GetInternalDepositRecords(t *testing.T) {
+func TestV5Asset_GetInternalDepositRecords(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetInternalDepositRecordsParam{}
 
@@ -367,7 +530,7 @@ func GetInternalDepositRecords(t *testing.T) {
 	})
 }
 
-func TestGetMasterDepositAddress(t *testing.T) {
+func TestV5Asset_GetMasterDepositAddress(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetMasterDepositAddressParam{}
 
@@ -433,7 +596,7 @@ func TestGetMasterDepositAddress(t *testing.T) {
 	})
 }
 
-func TestGetWithdrawalRecords(t *testing.T) {
+func TestV5Asset_GetWithdrawalRecords(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetWithdrawalRecordsParam{}
 
@@ -492,7 +655,7 @@ func TestGetWithdrawalRecords(t *testing.T) {
 	})
 }
 
-func TestGetCoinInfo(t *testing.T) {
+func TestV5Asset_GetCoinInfo(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetCoinInfoParam{}
 
@@ -589,7 +752,7 @@ func TestGetCoinInfo(t *testing.T) {
 	})
 }
 
-func TestGetAllCoinsBalance(t *testing.T) {
+func TestV5Asset_GetAllCoinsBalance(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		param := V5GetAllCoinsBalanceParam{}
 

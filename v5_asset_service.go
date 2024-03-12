@@ -15,6 +15,7 @@ type V5AssetServiceI interface {
 	CreateInternalTransfer(V5CreateInternalTransferParam) (*V5CreateInternalTransferResponse, error)
 	GetInternalTransferRecords(V5GetInternalTransferRecordsParam) (*V5GetInternalTransferRecordsResponse, error)
 	CreateUniversalTransfer(V5CreateUniversalTransferParam) (*V5CreateUniversalTransferResponse, error)
+	GetUniversalTransferRecords(V5GetUniversalTransferRecordsParam) (*V5GetUniversalTransferRecordsResponse, error)
 	GetDepositRecords(V5GetDepositRecordsParam) (*V5GetDepositRecordsResponse, error)
 	GetSubDepositRecords(V5GetSubDepositRecordsParam) (*V5GetSubDepositRecordsResponse, error)
 	GetInternalDepositRecords(V5GetInternalDepositRecordsParam) (*V5GetInternalDepositRecordsResponse, error)
@@ -221,14 +222,14 @@ type V5GetUniversalTransferRecordsResult struct {
 	NextPageCursor string                            `json:"nextPageCursor"`
 }
 
-type V5GetUniversalTransferRecordsList []V5GetInternalTransferRecordsItem
+type V5GetUniversalTransferRecordsList []V5GetUniversalTransferRecordsItem
 
 type V5GetUniversalTransferRecordsItem struct {
 	TransferID      string           `json:"transferId"`
 	Coin            Coin             `json:"coin"`
 	Amount          string           `json:"amount"`
-	FromMemberID    string           `json:"fromMemberID"`
-	ToMemberID      string           `json:"ToMemberID"`
+	FromMemberID    string           `json:"fromMemberId"`
+	ToMemberID      string           `json:"toMemberId"`
 	FromAccountType AccountTypeV5    `json:"fromAccountType"`
 	ToAccountType   AccountTypeV5    `json:"toAccountType"`
 	Timestamp       string           `json:"timestamp"`
