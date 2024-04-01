@@ -465,6 +465,7 @@ type SymbolDataV5 struct {
 	QuoteCoin     Coin             `json:"quoteCoin"`
 	Innovation    Innovation       `json:"innovation"`
 	Status        InstrumentStatus `json:"status"`
+	MarginTrading string           `json:"marginTrading"`
 	LotSizeFilter LotSizeFilterV5  `json:"lotSizeFilter"`
 	PriceFilter   PriceFilterV5    `json:"priceFilter"`
 }
