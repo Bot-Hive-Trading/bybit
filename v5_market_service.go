@@ -1051,6 +1051,7 @@ func (s *V5MarketService) GetInsurance(param V5GetInsuranceParam) (*V5GetInsuran
 type V5GetRiskLimitParam struct {
 	Category CategoryV5 `url:"category"`
 
+	Cursor *string   `url:"cursor,omitempty"`
 	Symbol *SymbolV5 `url:"symbol,omitempty"`
 }
 
