@@ -96,6 +96,9 @@ func (r *V5WebsocketPublicTradeResponse) Key() V5WebsocketPublicTradeParamKey {
 
 // addParamTradeFunc :
 func (s *V5WebsocketPublicService) addParamTradeFunc(key V5WebsocketPublicTradeParamKey, f func(V5WebsocketPublicTradeResponse) error) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if _, exist := s.paramTradeMap[key]; exist {
 		return errors.New("already registered for this key")
 	}
@@ -105,11 +108,17 @@ func (s *V5WebsocketPublicService) addParamTradeFunc(key V5WebsocketPublicTradeP
 
 // removeParamTradeFunc :
 func (s *V5WebsocketPublicService) removeParamTradeFunc(key V5WebsocketPublicTradeParamKey) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	delete(s.paramTradeMap, key)
 }
 
 // retrievePositionFunc :
 func (s *V5WebsocketPublicService) retrieveTradeFunc(key V5WebsocketPublicTradeParamKey) (func(V5WebsocketPublicTradeResponse) error, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	f, exist := s.paramTradeMap[key]
 	if !exist {
 		return nil, errors.New("func not found")

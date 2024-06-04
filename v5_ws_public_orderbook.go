@@ -150,6 +150,10 @@ func (r *V5WebsocketPublicOrderBookResponse) Key() V5WebsocketPublicOrderBookPar
 
 // addParamOrderBookFunc :
 func (s *V5WebsocketPublicService) addParamOrderBookFunc(key V5WebsocketPublicOrderBookParamKey, f func(V5WebsocketPublicOrderBookResponse) error) error {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if _, exist := s.paramOrderBookMap[key]; exist {
 		return errors.New("already registered for this param")
 	}
@@ -159,11 +163,17 @@ func (s *V5WebsocketPublicService) addParamOrderBookFunc(key V5WebsocketPublicOr
 
 // removeParamTradeFunc :
 func (s *V5WebsocketPublicService) removeParamOrderBookFunc(key V5WebsocketPublicOrderBookParamKey) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	delete(s.paramOrderBookMap, key)
 }
 
 // retrievePositionFunc :
 func (s *V5WebsocketPublicService) retrieveOrderBookFunc(key V5WebsocketPublicOrderBookParamKey) (func(V5WebsocketPublicOrderBookResponse) error, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	f, exist := s.paramOrderBookMap[key]
 	if !exist {
 		return nil, errors.New("func not found")
